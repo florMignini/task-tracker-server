@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "server for task tracker application ",
   "main": "index.js",
+
   "scripts": {
-    "start": "node --loader ts-node/esm ./src/index.ts",
+    "start": "npx ts-node --esm ./src/index.ts",
     "dev": "nodemon ./src/index.js"
   },
   "keywords": [
