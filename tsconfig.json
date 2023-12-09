@@ -27,5 +27,6 @@
   "outDir": "./dist",
   "forceConsistentCasingInFileNames": true,
   "strict": true,
+  "allowImportingTsExtensions": true
 }
 }
