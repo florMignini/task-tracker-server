@@ -1,4 +1,5 @@
 import express from "express";
+import { Server as appServer } from "http";
 import cors from "cors";
 //db import
 import connectDB from "../config/db";
@@ -12,6 +13,8 @@ const app = express();
 app.use(express.json());
 //DB connection
 connectDB();
+
+const http = new appServer(app)
 
 //cors config
 const whiteList = [process.env.FRONTEND_URL];
@@ -33,7 +36,7 @@ app.use("/user", userRoutes);
 app.use("/projects", projectRoutes);
 app.use("/tasks", taskRoutes);
 
-const server = app.listen(PORT, () => {
+const server = http.listen(PORT, () => {
   console.log(`listening on port: ${PORT}`);
 });
 
