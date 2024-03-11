@@ -18,7 +18,13 @@ const createProject = async (req: any, res: Response) => {
 const getAllProjects = async (req: any, res: Response) => {
   const projectsByUser = await Project.find({
     $or: [{ collaborator: { $in: req.user } }, { creator: { $in: req.user } }],
-  }).select("-tasks");
+  })
+  .populate({ 
+    path: 'tasks',
+    populate: {
+     path: 'completedBy',
+    }
+ })
   res.status(200).json(projectsByUser);
 };
 
@@ -26,7 +32,12 @@ const getSingleProjectServer = async (req: any, res: Response) => {
   const { id } = req.params;
 
   const singleProject = await Project.findById(id)
-    .populate("tasks", "name description deadline")
+  .populate({ 
+    path: 'tasks',
+    populate: {
+     path: 'completedBy',
+    }
+ })
     .populate("collaborator", "name email profilePicture");
 
   if (!singleProject) {
