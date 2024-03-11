@@ -17,26 +17,30 @@ const createProject = async (req: any, res: Response) => {
 
 const getAllProjects = async (req: any, res: Response) => {
   const projectsByUser = await Project.find({
-    $or: [
-      {collaborator: {$in: req.user}},
-      {creator: {$in: req.user}},
-    ]
-  }) 
-    .select("-tasks");
+    $or: [{ collaborator: { $in: req.user } }, { creator: { $in: req.user } }],
+  }).select("-tasks");
   res.status(200).json(projectsByUser);
 };
 
 const getSingleProjectServer = async (req: any, res: Response) => {
   const { id } = req.params;
 
-  const singleProject = await Project.findById(id).populate({path:"tasks", populate: {path: "completedBy", select:"-__v -password"}}).populate("collaborator", "name email profilePicture");
+  const singleProject = await Project.findById(id)
+    .populate("tasks", "name description deadline")
+    .populate("collaborator", "name email profilePicture");
 
   if (!singleProject) {
     const error = new Error(`Project not found`);
     return res.status(404).json({ msg: error.message });
   }
   //only owner & collaborators have access
-  if (singleProject.creator.toString() !== req.user._id.toString() && !singleProject.collaborator.some((collaborator:any) => collaborator._id.toString()===req.user._id.toString())) {
+  if (
+    singleProject.creator.toString() !== req.user._id.toString() &&
+    !singleProject.collaborator.some(
+      (collaborator: any) =>
+        collaborator._id.toString() === req.user._id.toString()
+    )
+  ) {
     const error = new Error(`user unauthorized`);
     return res.status(401).json({ msg: error.message });
   }
@@ -123,27 +127,29 @@ const addCollaborator = async (req: any, res: Response) => {
       msg: error.message,
     });
   }
-  //admin user can not be a added as collaborator  
-  if(projectById.creator.toString() === userByEmail._id.toString()){
-    const error = new Error(`Owner can not be added as collaborators`)
+  //admin user can not be a added as collaborator
+  if (projectById.creator.toString() === userByEmail._id.toString()) {
+    const error = new Error(`Owner can not be added as collaborators`);
     return res.status(403).json({
-      msg: error.message
-    })
+      msg: error.message,
+    });
   }
   //collaborators only can be added once
-  if(projectById.collaborator.includes(userByEmail._id)){
-    const error = new Error(`User ${userByEmail.name} is already a collaborator`)
+  if (projectById.collaborator.includes(userByEmail._id)) {
+    const error = new Error(
+      `User ${userByEmail.name} is already a collaborator`
+    );
     return res.status(404).json({
-      msg: error.message
-    })
+      msg: error.message,
+    });
   }
   //success path
-  projectById.collaborator.push(userByEmail._id)
-  await projectById.save()
+  projectById.collaborator.push(userByEmail._id);
+  await projectById.save();
   return res.status(200).json({
     msg: `${userByEmail.name} is now a collaborator`,
-    userByEmail
-  })
+    userByEmail,
+  });
 };
 const searchCollaborator = async (req: Request, res: Response) => {
   const { email } = req.body;
@@ -178,12 +184,12 @@ const deleteCollaborator = async (req: any, res: Response) => {
     });
   }
   //delete collaborator
-  projectById.collaborator.pull(req.body.id)
+  projectById.collaborator.pull(req.body.id);
 
-  await projectById.save()
+  await projectById.save();
   return res.status(200).json({
-  msg: `Collaborator deleted successfully`
-  })
+    msg: `Collaborator deleted successfully`,
+  });
 };
 
 export {
