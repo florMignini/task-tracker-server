@@ -27,6 +27,10 @@ const taskSchema = new mongoose.Schema(
       enum: ["Low", "High", "Medium"],
       require: true,
     },
+    assignedTo:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     completedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

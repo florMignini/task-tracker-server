@@ -22,7 +22,7 @@ const getAllProjects = async (req: any, res: Response) => {
       {creator: {$in: req.user}},
     ]
   }) 
-    .select("-tasks");
+    .populate("tasks");
   res.status(200).json(projectsByUser);
 };
 
