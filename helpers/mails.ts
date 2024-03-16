@@ -8,13 +8,22 @@ export const registerVerification = async({email, name, token}: personalInfoType
     const transport = nodemailer.createTransport({
         host: process.env.MAILTRAP_HOST,
         port: 2525,
+        secure: true,
         auth: {
           user: process.env.MAILTRAP_USER,
           pass: process.env.MAILTRAP_PASSWORD
         }
       });
 
-      const emailInfo = await transport.sendMail({
+      transport.verify()
+      .then(()=>{
+      console.log("transport successfully verified");
+      })
+      .catch((error)=>{
+      console.error(error);
+      });
+      // email template
+       await transport.sendMail({
     from:`task-tracker app - <accounts@task-tracker.com> `,
         to: email,
         subject: `task-tracker app - verify your email account`,
@@ -43,6 +52,14 @@ export const forgottenPasswordVerification = async({email, name, token}: persona
         pass: process.env.MAILTRAP_PASSWORD
       }
     });
+
+    transport.verify()
+      .then(()=>{
+      console.log("gmail successfully updated")
+      })
+      .catch((error)=>{
+      console.error(error);
+      });
 
     const emailInfo = await transport.sendMail({
   from:`task-tracker app - <accounts@task-tracker.com> `,
