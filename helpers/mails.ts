@@ -6,12 +6,12 @@ export interface personalInfoType {
 }
 export const registerVerification = async({email, name, token}: personalInfoType) => {
     const transport = nodemailer.createTransport({
-        host: process.env.MAILTRAP_HOST,
-        port: 2525,
+        host: process.env.MAIL_HOST,
+        port: 465,
         secure: true,
         auth: {
-          user: process.env.MAILTRAP_USER,
-          pass: process.env.MAILTRAP_PASSWORD
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASSWORD
         }
       });
 
