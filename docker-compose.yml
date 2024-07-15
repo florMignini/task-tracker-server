@@ -1,0 +1,16 @@
+version: '3'
+
+
+services:
+  task-tracker-db:
+    container_name: task-tracker
+    image: postgres:16.2
+    restart: always
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: task-tracker_db
