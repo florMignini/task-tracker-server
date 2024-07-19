@@ -1,4 +1,4 @@
-import { BaseEntity, IUser } from 'src/interfaces';
+import { BaseEntity, IUser } from '../../interfaces';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { UserTasksEntity } from './user-tasks.entity';
 

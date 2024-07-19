@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany } from 'typeorm';
-import { UserTasksEntity } from 'src/users/entities/user-tasks.entity';
-import { BaseEntity, ITask, TaskStatus } from 'src/interfaces';
+import { UserTasksEntity } from '../../users/entities/user-tasks.entity';
+import { BaseEntity, ITask, TaskStatus } from '../../interfaces';
 
 @Entity({ name: 'tasks' })
 export class TaskEntity extends BaseEntity implements ITask {
