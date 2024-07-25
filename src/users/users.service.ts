@@ -51,6 +51,7 @@ export class UsersService {
       throw ErrorHandler.createCustomError(error.message);
     }
   }
+
   public async updateUser(
     id: string,
     updateUserDto: UpdateUserDto,
