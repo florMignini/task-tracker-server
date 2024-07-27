@@ -1,4 +1,5 @@
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
@@ -11,9 +12,28 @@ export class UsersService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {}
-  public async createUser(newUser: CreateUserDto): Promise<UserEntity> {
+  public async createUser(newUserEntity: CreateUserDto): Promise<UserEntity> {
     try {
-      return await this.userRepository.save(newUser);
+      //checking if user already exist in DB
+      const existingUser = await this.userRepository.findOne({
+        where: {
+          email: newUserEntity.email,
+        },
+      });
+      if (existingUser) {
+        throw new ErrorHandler({
+          type: 'CONFLICT',
+          message: 'Email already exists',
+        });
+      } else {
+        const newUser = await this.userRepository.create(newUserEntity);
+        const hashedPassword = await bcrypt.hashSync(
+          newUser.password,
+          +process.env.HASH_SALT,
+        );
+        newUser.password = hashedPassword;
+        return await this.userRepository.save(newUser);
+      }
     } catch (error) {
       throw new Error(error);
     }
