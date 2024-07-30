@@ -101,4 +101,25 @@ export class UsersService {
       throw ErrorHandler.createCustomError(error.message);
     }
   }
+
+  public async findBy({
+    key,
+    value,
+  }: {
+    key: keyof UserEntity;
+    value: any;
+  }): Promise<UserEntity> {
+    try {
+      const user: UserEntity = await this.userRepository
+        .createQueryBuilder('user')
+        .addSelect('user.password')
+        .where({
+          [key]: value,
+        })
+        .getOne();
+      return user;
+    } catch (error) {
+      throw ErrorHandler.createCustomError(error.message);
+    }
+  }
 }
