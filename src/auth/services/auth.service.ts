@@ -2,6 +2,7 @@ import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
+import { UserEntity } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -32,7 +33,7 @@ export class AuthService {
     return null;
   }
 
-  // Generate sign for JWT
+  // sign for JWT
   public async signToken({
     payload,
     secret,
@@ -45,4 +46,21 @@ export class AuthService {
     return jwt.sign(payload, secret, { expiresIn: expires });
   }
 
+  // Generate JWT
+  public async generateJwt(user: UserEntity): Promise<any> {
+    const getUser = await this.userService.getSingleUserById(user.id);
+    const payload = {
+      sub: getUser.id,
+      username: getUser.username,
+      email: getUser.email,
+    };
+    return {
+      accessToken: this.signToken({
+        payload,
+        secret: process.env.JWT_SECRET,
+        expires: process.env.JWT_EXPIRES_IN,
+      }),
+      user,
+    };
+  }
 }
