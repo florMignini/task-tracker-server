@@ -7,6 +7,7 @@ import { DataSourceConfig } from './config/data.source';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthController } from './auth/auth.controller';
+import { AuthService } from './auth/auth.service';
 
 @Module({
   imports: [
@@ -20,6 +21,6 @@ import { AuthController } from './auth/auth.controller';
     AuthModule,
   ],
   controllers: [AuthController],
-  providers: [],
+  providers: [AuthService],
 })
 export class AppModule {}
