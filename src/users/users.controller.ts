@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -18,13 +19,13 @@ export class UsersController {
   public
   register user method
   */
+  @Public()
   @Post('register')
   public async register(@Body() createUserDto: CreateUserDto) {
     return await this.usersService.createUser(createUserDto);
   }
 
   /* 
-  public
   get all users method
   */
   @Get('get-all')
@@ -32,8 +33,7 @@ export class UsersController {
     return await this.usersService.getAllUsers();
   }
 
-  /* 
-  public 
+  /*  
   get single user by id method
   */
   @Get(':id')
@@ -41,8 +41,7 @@ export class UsersController {
     return await this.usersService.getSingleUserById(id);
   }
 
-  /* 
-  public 
+  /*  
   update user method
   */
   @Put('update/:id')
@@ -53,8 +52,7 @@ export class UsersController {
     return await this.usersService.updateUser(id, updateUserDto);
   }
 
-  /* 
-  public 
+  /*  
   delete user method
   */
   @Delete('delete-user')
