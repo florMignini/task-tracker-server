@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/guards/auth.guard';
+import { ProjectsModule } from './projects/projects.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AuthGuard } from './auth/guards/auth.guard';
     UsersModule,
     TasksModule,
     AuthModule,
+    ProjectsModule,
   ],
   controllers: [AuthController],
   providers: [
