@@ -11,6 +11,7 @@ import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/guards/auth.guard';
 import { ProjectsModule } from './projects/projects.module';
+import { ProjectsService } from './projects/projects.service';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ProjectsModule } from './projects/projects.module';
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
+    ProjectsService,
   ],
 })
 export class AppModule {}
