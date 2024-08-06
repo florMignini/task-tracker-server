@@ -1,6 +1,6 @@
-import { BaseEntity, IProject } from 'src/interfaces';
-import { UserProjectsEntity } from 'src/users/entities/user-project.entity';
-import { UserEntity } from 'src/users/entities/user.entity';
+import { BaseEntity, IProject } from '../../interfaces';
+import { UserProjectsEntity } from '../../users/entities/user-project.entity';
+import { UserEntity } from '../../users/entities/user.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity({ name: 'projects' })
