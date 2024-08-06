@@ -1,6 +1,6 @@
 import { BaseEntity, IUser } from '../../interfaces';
 import { Column, Entity, ManyToOne } from 'typeorm';
-import { UserTasksEntity } from './user-tasks.entity';
+import { UserProjectsEntity } from './user-project.entity';
 import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'users' })
@@ -16,6 +16,6 @@ export class UserEntity extends BaseEntity implements IUser {
   @Column()
   @Exclude()
   password: string;
-  @ManyToOne(() => UserTasksEntity, (userTasks) => userTasks.user)
-  tasksIncluded: UserTasksEntity[];
+  @ManyToOne(() => UserProjectsEntity, (userProjects) => userProjects.user)
+  projectsIncluded: UserProjectsEntity[];
 }
