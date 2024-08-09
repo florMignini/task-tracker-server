@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProjectEntity } from './entities/projects.entity';
-import { Repository } from 'typeorm';
-import { CreateProjectDto } from './dto/create-project.dto';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+
 import { ErrorHandler } from 'utils/error-handler';
+import { CreateProjectDto, UpdateProjectDto } from './dto';
 
 @Injectable()
 export class ProjectsService {
@@ -33,6 +34,72 @@ export class ProjectsService {
       }
     } catch (error) {
       throw new Error(error);
+    }
+  }
+
+  public async getAllProjects(): Promise<ProjectEntity[]> {
+    try {
+      const projects: ProjectEntity[] = await this.projectRepository.find();
+      if (projects.length === 0) {
+        throw new ErrorHandler({
+          type: 'NOT_FOUND',
+          message: 'No projects found',
+        });
+      }
+      return projects;
+    } catch (error) {
+      throw ErrorHandler.createCustomError(error.message);
+    }
+  }
+
+  public async getSingleProjectById(id: string): Promise<ProjectEntity> {
+    try {
+      const project: ProjectEntity = await this.projectRepository
+        .createQueryBuilder('project')
+        .where({ id })
+        .getOne();
+      if (!project) {
+        throw new ErrorHandler({
+          type: 'NOT_FOUND',
+          message: `Project with id ${id} was not found`,
+        });
+      }
+      return project;
+    } catch (error) {
+      throw ErrorHandler.createCustomError(error.message);
+    }
+  }
+
+  public async updateProject(
+    id: string,
+    updateProjectDto: UpdateProjectDto,
+  ): Promise<UpdateResult | undefined> {
+    try {
+      const projectToUpdate = await this.projectRepository.update(
+        id,
+        updateProjectDto,
+      );
+      if (projectToUpdate.affected === 0) {
+        throw new ErrorHandler({
+          type: 'BAD_REQUEST',
+          message: `update could not be completed`,
+        });
+      }
+      return projectToUpdate;
+    } catch (error) {
+      throw ErrorHandler.createCustomError(error.message);
+    }
+  }
+
+  public async deleteProject(id: string): Promise<DeleteResult | undefined> {
+    try {
+      const projectToDelete = await this.projectRepository.delete(id);
+      if (!projectToDelete) {
+        throw new Error('Project not found');
+      }
+      return projectToDelete;
+    } catch (error) {
+      throw ErrorHandler.createCustomError(error.message);
     }
   }
 }
