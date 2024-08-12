@@ -3,14 +3,17 @@ import * as bcrypt from 'bcrypt';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
-import { UpdateUserDto, CreateUserDto } from './dto';
+import { UpdateUserDto, CreateUserDto, UserProjectDto } from './dto';
 import { ErrorHandler } from 'utils/error-handler';
+import { UserProjectsEntity } from './entities/user-project.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(UserProjectsEntity)
+    private readonly userProjectRepository: Repository<UserProjectsEntity>,
   ) {}
   public async createUser(newUserEntity: CreateUserDto): Promise<UserEntity> {
     try {
@@ -102,6 +105,13 @@ export class UsersService {
     }
   }
 
+  public async relateToProject(userProject: UserProjectDto) {
+    try {
+      return await this.userProjectRepository.save(userProject);
+    } catch (error) {
+      throw ErrorHandler.createCustomError(error.message);
+    }
+  }
   public async findBy({
     key,
     value,

@@ -8,7 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import { CreateUserDto, UpdateUserDto, UserProjectDto } from './dto';
 import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('users')
@@ -41,6 +41,11 @@ export class UsersController {
     return await this.usersService.getSingleUserById(id);
   }
 
+  @Post('project-to-owner')
+  public async isProjectOwner(@Body() userProject: UserProjectDto) {
+    return await this.usersService.relateToProject(userProject);
+  }
+
   /*  
   update user method
   */
@@ -55,7 +60,7 @@ export class UsersController {
   /*  
   delete user method
   */
-  @Delete('delete-user')
+  @Delete('delete-user/:id')
   public async deleteUser(@Param('id') id: string) {
     return await this.usersService.deleteUser(id);
   }
